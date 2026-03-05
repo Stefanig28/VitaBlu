@@ -1,5 +1,7 @@
 <section class="scroll-video-section">
+  
   <div class="video-sticky">
+
     <video
       id="scrollVideo"
       muted
@@ -7,51 +9,92 @@
       preload="auto"
       src="https://cdn.shopify.com/videos/c/o/v/3309f94faa53445eb29a65178b8dca68.mp4">
     </video>
+
+    <img 
+      id="endImage"
+      src="https://cdn.shopify.com/s/files/1/0773/2776/1630/files/PATTERN_VITABLU_VERDE.jpg?v=1772729319"
+      alt="Vitablu Pattern"
+    />
+
   </div>
+
 </section>
 
 <style>
-.scroll-video-section {
-  height: 300vh;
-  position: relative;
+.scroll-video-section{
+  height:300vh;
+  position:relative;
 }
-.video-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
+
+.video-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
 }
-.video-sticky video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+
+/* VIDEO */
+.video-sticky video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+/* IMAGEN FINAL */
+#endImage{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+
+  opacity:0;
+  transition:opacity 0.3s linear;
+  pointer-events:none;
 }
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   const video = document.getElementById("scrollVideo");
   const section = document.querySelector(".scroll-video-section");
+  const image = document.getElementById("endImage");
 
   video.pause();
 
-  function updateVideo() {
+  function updateVideo(){
+
     const rect = section.getBoundingClientRect();
     const sectionHeight = section.offsetHeight - window.innerHeight;
 
-    // scrollTop relativo al inicio de la sección
     const scrolled = -rect.top;
     const progress = scrolled / sectionHeight;
     const clamped = Math.max(0, Math.min(progress, 1));
 
-    if (video.duration) {
+    if(video.duration){
       video.currentTime = video.duration * clamped;
     }
+
+    /* Cuando el video termina aparece la imagen */
+    const fadeStart = 0.85;
+
+    if(clamped > fadeStart){
+      const fadeProgress = (clamped - fadeStart) / (1 - fadeStart);
+      image.style.opacity = fadeProgress;
+    } else {
+      image.style.opacity = 0;
+    }
+
   }
 
-  // Esperar a que el video tenga metadata cargada
   video.addEventListener("loadedmetadata", updateVideo);
-  window.addEventListener("scroll", updateVideo, { passive: true });
+  window.addEventListener("scroll", updateVideo, {passive:true});
+
 });
 </script>
 
