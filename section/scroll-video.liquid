@@ -107,62 +107,89 @@ z-index:1;
 }
 
 .carousel-overlay{
-position:absolute;
-bottom:48px;
-left:0;
-right:0;
-z-index:10;
-display:flex;
-align-items:center;
-gap:12px;
-padding:0 20px;
-opacity:0;
-transform:translateY(16px);
-transition:opacity .4s ease,transform .4s ease;
-pointer-events:none;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 20px;
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .4s ease,transform .4s ease;
+  pointer-events:none;
 }
 
 .carousel-overlay.visible{
-opacity:1;
-transform:translateY(0);
-pointer-events:all;
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:all;
 }
 
 .carousel-track-wrapper{
-flex:1;
-overflow:hidden;
-border-radius:12px;
+  flex:1;
+  height:100%;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-radius:12px;
 }
 
 .carousel-track{
-display:flex;
-gap:12px;
-transition:transform .45s cubic-bezier(.25,.46,.45,.94);
+  display:flex;
+  gap:12px;
+  height:100%;
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94);
 }
 
 .carousel-item{
-flex:0 0 calc(25% - 9px);
-aspect-ratio:9/16;
-border-radius:10px;
-overflow:hidden;
-background:#111;
+  flex:0 0 calc(25% - 9px);
+  height:80vh;
+  border-radius:10px;
+  overflow:hidden;
+  background:#111;
+}
+
+@media(max-width:599px){
+  .carousel-item{
+    flex:0 0 100%;
+    height:80vh;
+  }
+  .carousel-overlay{
+    padding:0 8px;
+    gap:6px;
+  }
+}
+
+@media(min-width:600px) and (max-width:899px){
+  .carousel-item{
+    flex:0 0 calc(50% - 6px);
+  }
 }
 
 .carousel-item img,
 .carousel-item video{
-width:100%;
-height:100%;
-object-fit:cover;
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .carousel-arrow{
-width:40px;
-height:40px;
-border-radius:50%;
-border:none;
-background:rgba(255,255,255,.2);
-color:#fff;
-cursor:pointer;
+  width:40px;
+  height:40px;
+  flex-shrink:0;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.2);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 </style>
@@ -222,7 +249,8 @@ function getMaxIndex(){
 
 function moveCarousel(dir){
   currentIndex=Math.max(0,Math.min(currentIndex+dir, getMaxIndex()));
-  const itemWidth=track.querySelector(".carousel-item").offsetWidth+12;
+  const item=track.querySelector(".carousel-item");
+  const itemWidth=item.getBoundingClientRect().width+12;
   track.style.transform=`translateX(-${currentIndex*itemWidth}px)`;
 }
 
